@@ -1,0 +1,131 @@
+body{
+    background-color: #435334;
+    margin: 0;
+    padding: 0;
+}
+
+footer{
+    background-color: #9EB384;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+header{
+    background-color: #9EB384;
+    height: 9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo{
+    height: 100px;
+    width: auto;
+}
+
+.headerText{
+    font-family: "Yu Gothic Medium";
+    font-size: 2.5rem;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+}
+
+#map {
+    height: 80vh;
+    width: 50%;
+    margin-top: 20px;
+    border-radius: 20px;
+}
+
+#box2 {
+    background-color: #FAF1E4;
+    height: 60vh;
+    width: 40vh;
+    margin: auto;
+    border-radius: 20px;
+}
+
+#box {
+    background-color: #FAF1E4;
+    height: 60vh;
+    width: 40vh;
+    margin: auto;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#box h2, #box2 h2 {
+    color: #333;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#box p, #box2 p {
+    color: #666;
+    font-size: 1em;
+    text-align: justify;
+    padding: 10px;
+}
+
+
+.button{
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 20px;
+    transition-property: background-color,border-color,color,box-shadow,filter;
+    transition-duration: .3s;
+    border: 1px solid transparent;
+    letter-spacing: 2px;
+    min-width: 160px;
+    text-transform: uppercase;
+    white-space: normal;
+    font-weight: 700;
+    text-align: center;
+    padding: 16px 14px 18px;
+    color: #fff;
+    background-color: #435334;
+    height: 48px;
+}
+
+.button:hover{
+    background-color: #9EB384;
+}
+
+#buttons {
+    display: flex;
+    align-items: center;
+    margin: 25px;
+}
+
+#menuText{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form{
+    display: none;
+    align-items: center;
+    margin: 10px;
+}
+
+.form input[type="submit"] {
+    height: 30px;
+    width: 100px;
+    padding: 5px 10px;
+    margin-top: 10px;
+}
+
+#buttons .button:first-child {
+    margin-right: 20px;
+}

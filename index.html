@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <img id="logo" src="Resources/cutlery.png" alt="logo"/>
+    <h1 class="headerText">Student restaurants</h1>
+</header>
+<div id="container">
+    <div id="box">
+        <div id="buttons">
+            <button id="loginButton" class="button">Login</button>
+            <button id="registerButton" class="button">Register</button>
+            <form id="loginForm" class="form">
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" name="username" required><br>
+                <label for="password">Password:</label><br>
+                <input type="password" id="password" name="password" required><br>
+                <input class="button" type="submit" value="Login">
+            </form>
+            <form id="registerForm" class="form">
+                <label for="regUsername">Username:</label><br>
+                <input type="text" id="regUsername" name="regUsername" required><br>
+                <label for="regPassword">Password:</label><br>
+                <input type="password" id="regPassword" name="regPassword" required><br>
+                <label for="regConfirmPassword">Confirm Password:</label><br>
+                <input type="password" id="regConfirmPassword" name="regConfirmPassword" required><br>
+                <input class="button" type="submit" value="Register">
+            </form>
+        </div>
+    </div>
+    <div id="map"></div>
+    <div id="box2">
+        <h2 class="headerText">Menu</h2>
+        <p id="menuText">Here comes the menu from api :D</p>
+    </div>
+</div>
+<footer></footer>
+</body>
+</html>
