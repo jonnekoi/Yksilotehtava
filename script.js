@@ -14,6 +14,8 @@ const loginButton = document.getElementById("loginButton");
 const loginForm = document.getElementById("loginForm");
 const registerButton = document.getElementById("registerButton");
 const registerForm = document.getElementById("registerForm");
+const returnButtonRegister = document.getElementById("returnButton");
+const returnButtonLogin = document.getElementById("returnButtonLogin");
 
 loginButton.onclick = function (){
     console.log("login button clicked!")
@@ -27,4 +29,18 @@ registerButton.onclick = function (){
     registerForm.style.display = 'block';
     loginButton.style.display = 'none';
     registerButton.style.display = 'none';
+}
+
+returnButtonRegister.onclick = function (){
+    console.log("Return button clicked.")
+    registerForm.style.display = 'none';
+    loginButton.style.display = 'block';
+    registerButton.style.display = 'block';
+}
+
+returnButtonLogin.onclick = function () {
+    console.log("Return button clicked.")
+    loginForm.style.display = 'none';
+    loginButton.style.display = 'block';
+    registerButton.style.display = 'block';
 }
