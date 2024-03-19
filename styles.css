@@ -127,7 +127,7 @@ header {
     }
 }
 
-input[type="text"], input[type="password"]{
-    border-radius: 20px;
+input[type="text"], input[type="password"], input[type="email"]{
+    border-radius: 10px;
     border: 1px solid #A27B5C;
 }
