@@ -26,7 +26,7 @@ let kieli = 'fi';
 
 map.locate({setView: true, maxZoom: 16});
 map.on('locationfound', function (e) {
-    map.setView(e.latlng, 13);
+    map.setView(e.latlng, 10);
     const myIcon = L.icon({
         iconUrl: 'Resources/UserLocationIcon.png',
         iconSize: [41, 41],
