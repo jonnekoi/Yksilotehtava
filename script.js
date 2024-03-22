@@ -44,6 +44,17 @@ document.addEventListener('DOMContentLoaded', async function (){
     await getRestaurants();
 })
 
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    login();
+});
+
+document.getElementById('registerForm').addEventListener('submit', function (event){
+    event.preventDefault();
+    register();
+})
+
+
 lightButton.onclick = function (){
     if(!isLight){
         headerElement.style.backgroundColor = '#EBE3D5';
@@ -106,12 +117,14 @@ returnButtonRegister.onclick = function () {
     registerForm.style.display = 'none';
     loginButton.style.display = 'block';
     registerButton.style.display = 'block';
+    registerForm.reset();
 }
 
 returnButtonLogin.onclick = function () {
     loginForm.style.display = 'none';
     loginButton.style.display = 'block';
     registerButton.style.display = 'block';
+    loginForm.reset();
 }
 
 languageButton.onclick = function (){
@@ -195,7 +208,7 @@ async function getMenu(id, kieli) {
             if (data.courses && Array.isArray(data.courses) && data.courses.length > 0) {
                 data.courses.forEach(item => {
                     const menuItem = document.createElement('p');
-                    const priceText = item.price ? `: ${item.price}` : ' - Price not available';
+                    const priceText = item.price ? `: ${item.price}` : '';
                     menuItem.textContent = `${item.name}${priceText}`;
                     if(!isLight){
                         menuItem.style.color = 'white';
@@ -218,4 +231,53 @@ async function getMenu(id, kieli) {
         .catch(error => {
             console.log(error);
         });
+}
+
+function login(){
+    const loginInput = document.getElementById("loginUsername");
+    const loginValue = loginInput.value;
+    const loginInputPassword = document.getElementById("loginPassword");
+    const loginValuePassword = loginInputPassword.value;
+
+    const userDetails = {
+        username: loginValue,
+        password: loginValuePassword,
+    };
+
+    fetch("https://10.120.32.94/restaurant/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userDetails)
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.log(error))
+}
+
+function register(){
+    const registerInputUsername = document.getElementById("registerUsername");
+    const registerValueUsername = registerInputUsername.value;
+    const registerInputPassword = document.getElementById("registerPassword");
+    const registerValuePassword = registerInputPassword.value;
+    const registerInputEmail = document.getElementById("registerEmail");
+    const registerValueEmail = registerInputEmail.value;
+
+    const registerDetails = {
+        username: registerValueUsername,
+        password: registerValuePassword,
+        email: registerValueEmail,
+    };
+
+    fetch("https://10.120.32.94/restaurant/api/v1/users", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(registerDetails)
+    })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.log(error))
 }
