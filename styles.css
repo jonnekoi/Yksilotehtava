@@ -74,15 +74,14 @@ header {
 }
 
 #lightButton {
-    font-family: "Segoe Print";
     outline: none;
     cursor: pointer;
     font-size: 3rem;
     line-height: 1;
     border-radius: 50%;
-    letter-spacing: 0.125rem;
-    width: 7.8vh;
-    height: 7.8vh;
+    letter-spacing: 2px;
+    width: 4.375rem;
+    height: 4.375rem;
     text-align: center;
     color: #fff;
     background-color: #2C3639;
@@ -149,7 +148,6 @@ input[type="text"], input[type="password"], input[type="email"]{
 }
 
 #languageButton{
-    font-family: "Segoe Print";
     outline: none;
     cursor: pointer;
     font-size: 3rem;
@@ -172,4 +170,7 @@ input[type="text"], input[type="password"], input[type="email"]{
 .header-buttons {
     display: flex;
     gap: 0.625rem;
+}
+#logoutButton{
+    display: none;
 }

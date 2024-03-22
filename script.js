@@ -1,29 +1,7 @@
 'use strict';
 
+// MAP
 const map = L.map('map');
-
-const loginButton = document.getElementById("loginButton");
-const loginForm = document.getElementById("loginForm");
-const registerButton = document.getElementById("registerButton");
-const registerForm = document.getElementById("registerForm");
-const returnButtonRegister = document.getElementById("returnButtonRegister");
-const returnButtonLogin = document.getElementById("returnButtonLogin");
-const lightButton = document.getElementById("lightButton");
-const headerElement = document.querySelector("header");
-const bodyElement = document.querySelector("body");
-const htmlElement = document.querySelector("html");
-const boxElement = document.querySelectorAll(".box");
-const buttons = document.querySelectorAll(".button");
-const weather = document.querySelector(".weather");
-const headerText = document.querySelector(".headerText");
-const menuHeader  = document.querySelector(".menuHeader");
-const logo = document.getElementById("logo");
-const languageButton = document.getElementById("languageButton");
-const flag = document.getElementById("flag");
-let isLight = false;
-let language = false;
-let kieli = 'fi';
-
 map.locate({setView: true, maxZoom: 16});
 map.on('locationfound', function (e) {
     map.setView(e.latlng, 10);
@@ -39,24 +17,61 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright"></a>',
 }).addTo(map);
 
-document.addEventListener('DOMContentLoaded', async function (){
+const loginButton = document.getElementById("loginButton");
+const returnButtonLogin = document.getElementById("returnButtonLogin");
+const registerButton = document.getElementById("registerButton");
+const returnButtonRegister = document.getElementById("returnButtonRegister");
+const lightButton = document.getElementById("lightButton");
+const languageButton = document.getElementById("languageButton");
+const logoutButton = document.getElementById("logoutButton");
+const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+const headerElement = document.querySelector("header");
+const bodyElement = document.querySelector("body");
+const htmlElement = document.querySelector("html");
+const boxElement = document.querySelectorAll(".box");
+const buttons = document.querySelectorAll(".button");
+const weather = document.querySelector(".weather");
+const headerText = document.querySelector(".headerText");
+const menuHeader = document.querySelector(".menuHeader");
+const logo = document.getElementById("logo");
+const flag = document.getElementById("flag");
+const info = document.getElementById('userInfo');
+let isLight = false;
+let language = false;
+let kieli = 'fi';
+
+
+document.addEventListener('DOMContentLoaded', async function () {
     await getUserLocation();
     await getRestaurants();
+    userCheck()
 })
-
-document.getElementById('loginForm').addEventListener('submit', function(event) {
+loginForm.addEventListener('submit', function (event) {
     event.preventDefault();
-    login();
+    login()
 });
 
-document.getElementById('registerForm').addEventListener('submit', function (event){
+registerForm.addEventListener('submit', function (event) {
     event.preventDefault();
-    register();
+    register()
 })
 
+logoutButton.addEventListener('click', function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        loginButton.style.display = 'block';
+        registerButton.style.display = 'block';
+        logoutButton.style.display = 'none';
+        info.textContent = '';
+    }
+)
 
-lightButton.onclick = function (){
-    if(!isLight){
+
+lightButton.onclick = function () {
+    const menuItems = document.querySelectorAll("#restaurantMenu p");
+    const userInfo = document.querySelectorAll("#userInfo p")
+    if (!isLight) {
         headerElement.style.backgroundColor = '#EBE3D5';
         Array.from(boxElement).forEach(boxElement => {
             boxElement.style.backgroundColor = '#EBE3D5';
@@ -64,6 +79,12 @@ lightButton.onclick = function (){
         Array.from(buttons).forEach(buttons => {
             buttons.style.backgroundColor = '#B0A695';
             buttons.style.color = 'black';
+        })
+        menuItems.forEach(item => {
+            item.style.color = 'black';
+        })
+        userInfo.forEach(item => {
+            item.style.color = 'black';
         })
         logo.src = 'Resources/cutlery.png';
         lightButton.style.backgroundColor = '#B0A695';
@@ -77,7 +98,7 @@ lightButton.onclick = function (){
         document.body.classList.add('light-mode');
         this.innerHTML = "&#9790;";
         isLight = true;
-    }else{
+    } else {
         headerElement.style.backgroundColor = '#3F4E4F';
         Array.from(boxElement).forEach(boxElement => {
             boxElement.style.backgroundColor = '#3F4E4F';
@@ -85,6 +106,12 @@ lightButton.onclick = function (){
         Array.from(buttons).forEach(buttons => {
             buttons.style.backgroundColor = '#2C3639';
             buttons.style.color = 'white';
+        })
+        menuItems.forEach(item => {
+            item.style.color = 'white';
+        })
+        userInfo.forEach(item => {
+            item.style.color = 'white';
         })
         logo.src = 'Resources/cutlery_white.png';
         lightButton.style.backgroundColor = '#2C3639';
@@ -117,6 +144,7 @@ returnButtonRegister.onclick = function () {
     registerForm.style.display = 'none';
     loginButton.style.display = 'block';
     registerButton.style.display = 'block';
+    info.style.display = 'none';
     registerForm.reset();
 }
 
@@ -124,15 +152,16 @@ returnButtonLogin.onclick = function () {
     loginForm.style.display = 'none';
     loginButton.style.display = 'block';
     registerButton.style.display = 'block';
+    info.style.display = 'none';
     loginForm.reset();
 }
 
-languageButton.onclick = function (){
-    if(!language){
+languageButton.onclick = function () {
+    if (!language) {
         flag.src = 'Resources/fi.svg';
         language = true;
         kieli = 'en';
-    }else{
+    } else {
         flag.src = 'Resources/gb-eng.svg';
         language = false;
         kieli = 'fi';
@@ -144,7 +173,7 @@ languageButton.onclick = function (){
     }
 }
 
-function getWeather(lat, lon){
+function getWeather(lat, lon) {
     const api = "ce77882036e7ff2d906c8535496d7fd9";
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api}`;
 
@@ -158,7 +187,7 @@ function getWeather(lat, lon){
         })
 }
 
-function showWeather(data){
+function showWeather(data) {
     const weatherBox = document.querySelector(".weather");
     const temperature = data.main.temp;
     const city = data.name;
@@ -170,7 +199,7 @@ function showWeather(data){
 
 async function getUserLocation() {
     if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
             getWeather(lat, lon);
@@ -190,7 +219,7 @@ async function getRestaurants() {
                 const longitude = coordinates[1];
                 const id = item._id;
                 const marker = L.marker([longitude, latitude], {restaurantId: id}).addTo(map).bindPopup(item.name);
-                marker.on('popupopen', ()=> {
+                marker.on('popupopen', () => {
                     getMenu(id, kieli);
                 });
             })
@@ -210,19 +239,24 @@ async function getMenu(id, kieli) {
                     const menuItem = document.createElement('p');
                     const priceText = item.price ? `: ${item.price}` : '';
                     menuItem.textContent = `${item.name}${priceText}`;
-                    if(!isLight){
+                    if (!isLight) {
                         menuItem.style.color = 'white';
-                    }else {
+                    } else {
                         menuItem.style.color = 'black';
                     }
                     menuDiv.appendChild(menuItem);
                 });
             } else {
                 const noMenuAvailable = document.createElement('p');
-                noMenuAvailable.textContent = 'No menu available';
-                if(!isLight){
+                if (kieli == 'fi') {
+                    noMenuAvailable.textContent = 'Ei ruokalistaa saatavilla...';
+                } else {
+                    noMenuAvailable.textContent = 'No menu available...'
+                }
+
+                if (!isLight) {
                     noMenuAvailable.style.color = 'white';
-                }else {
+                } else {
                     noMenuAvailable.style.color = 'black';
                 }
                 menuDiv.appendChild(noMenuAvailable);
@@ -233,12 +267,12 @@ async function getMenu(id, kieli) {
         });
 }
 
-function login(){
+function login() {
+    const info = document.getElementById('userInfo');
     const loginInput = document.getElementById("loginUsername");
-    const loginValue = loginInput.value;
     const loginInputPassword = document.getElementById("loginPassword");
+    const loginValue = loginInput.value;
     const loginValuePassword = loginInputPassword.value;
-
     const userDetails = {
         username: loginValue,
         password: loginValuePassword,
@@ -252,11 +286,31 @@ function login(){
         body: JSON.stringify(userDetails)
     })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.data));
+            loginButton.style.display = 'none';
+            registerButton.style.display = 'none';
+            loginForm.style.display = 'none';
+            logoutButton.style.display = 'block';
+            const userDiv = document.getElementById("userInfo");
+            const userData = document.createElement('p');
+            if (data && data.data) {
+                userData.textContent = `Tervetuloa, ${data.data.username}`;
+                userData.style.color = 'white';
+            } else {
+                userData.textContent = 'Väärä käyttäjänimi tai salasana';
+                userData.style.color = 'red';
+                logoutButton.style.display = 'none';
+                loginForm.style.display = 'block';
+            }
+            userDiv.textContent = '';
+            userDiv.appendChild(userData);
+        })
         .catch(error => console.log(error))
 }
 
-function register(){
+function register() {
     const registerInputUsername = document.getElementById("registerUsername");
     const registerValueUsername = registerInputUsername.value;
     const registerInputPassword = document.getElementById("registerPassword");
@@ -277,7 +331,41 @@ function register(){
         },
         body: JSON.stringify(registerDetails)
     })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.log(error))
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.data));
+            loginButton.style.display = 'none';
+            registerButton.style.display = 'none';
+            registerForm.style.display = 'none';
+            logoutButton.style.display = 'block';
+            const userDiv = document.getElementById("userInfo");
+            const userData = document.createElement('p');
+            if (data && data.data) {
+                userData.textContent = `Tervetuloa, ${data.data.username}`;
+                userData.style.color = 'white';
+            } else {
+                userData.textContent = 'Rekisteröityminen epäonnistui';
+                userData.style.color = 'red';
+                logoutButton.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+            userDiv.textContent = '';
+            userDiv.appendChild(userData);
+        })
+        .catch(error => console.log(error))
+}
+
+function userCheck() {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (token && user) {
+        loginButton.style.display = 'none';
+        registerButton.style.display = 'none';
+        const userData = document.createElement('p');
+        userData.textContent = `Tervetuloa, ${user.username}`;
+        userData.style.color = 'white';
+        info.appendChild(userData);
+        logoutButton.style.display = 'block';
+    }
 }
