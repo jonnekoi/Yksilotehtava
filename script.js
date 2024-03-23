@@ -235,7 +235,7 @@ async function getUserLocation() {
 
 async function getRestaurants() {
     const url = "https://10.120.32.94/restaurant/api/v1/restaurants/";
-    fetch(url)
+    await fetch(url)
         .then(response => response.json())
         .then(data => {
             data.forEach(item => {
@@ -253,7 +253,7 @@ async function getRestaurants() {
 
 async function getMenu(id, kieli) {
     const urlMenu = `https://10.120.32.94/restaurant/api/v1/restaurants/daily/${id}/${kieli}`;
-    fetch(urlMenu)
+    await fetch(urlMenu)
         .then(response => response.json())
         .then(data => {
             const menuDiv = document.getElementById("restaurantMenu");
