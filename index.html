@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap">
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="styles.css">
     <title>Campus Kitchens</title>
@@ -12,12 +13,13 @@
 <body>
 <header>
     <img id="logo" src="Resources/cutlery_white.png" alt="Logo">
-    <h1 class="headerText">Campus Kitchens</h1>
+    <h1 class="headerText" id="campusKitchens">Campus Kitchens</h1>
     <div class="header-buttons">
         <button id="lightButton">&#9728;</button>
         <button id="languageButton" title="Menu language">
             <img id="flag" src="Resources/gb-eng.svg" width="35" height="auto">
         </button>
+        <button id="questionButton">&#x3f;</button>
     </div>
 </header>
 <div class="container">
@@ -42,9 +44,16 @@
         <button class="button" id="logoutButton">Logout</button>
         <div class="weather">
         </div>
+        <img src="Resources/graph.png" class="lowerPhoto" alt="lowerPhoto">
     </div>
 
     <div id="map">
+    </div>
+    <div id="popup" class="popup rainbow-background">
+        <p></p>
+        Can you make the Campus kitchens text a rainbow?
+        <p>Hint 3 times...</p>
+        <span id="closePopup" class="close">&times;</span>
     </div>
 
     <div class="box">

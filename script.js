@@ -1,6 +1,5 @@
 'use strict';
 
-// MAP
 const map = L.map('map');
 map.locate({setView: true, maxZoom: 16});
 map.on('locationfound', function (e) {
@@ -24,6 +23,7 @@ const returnButtonRegister = document.getElementById("returnButtonRegister");
 const lightButton = document.getElementById("lightButton");
 const languageButton = document.getElementById("languageButton");
 const logoutButton = document.getElementById("logoutButton");
+const questionButton = document.getElementById("questionButton");
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
 const headerElement = document.querySelector("header");
@@ -40,7 +40,9 @@ const info = document.getElementById('userInfo');
 let isLight = false;
 let language = false;
 let kieli = 'fi';
-
+let imageIndex = 0;
+let images = ['Resources/graph.png', 'Resources/graph(1).png', 'Resources/graph(2).png', 'Resources/cutlery.png'];
+const lowerPhoto = document.querySelector('.lowerPhoto');
 
 document.addEventListener('DOMContentLoaded', async function () {
     await getUserLocation();
@@ -66,6 +68,25 @@ logoutButton.addEventListener('click', function () {
         info.textContent = '';
     }
 )
+
+lowerPhoto.addEventListener('click', function() {
+    console.log('Current image index:', imageIndex);
+    this.src = images[imageIndex];
+    imageIndex = (imageIndex + 1) % images.length;
+    console.log('New image src:', this.src);
+    if (imageIndex === 0){
+        this.style.display = 'none';
+        headerText.classList.add('rainbow-text');
+    }
+});
+
+document.getElementById('questionButton').addEventListener('click', function() {
+    document.getElementById('popup').style.display = 'block';
+});
+document.getElementById('closePopup').addEventListener('click', function() {
+    document.getElementById('popup').style.display = 'none';
+});
+
 
 
 lightButton.onclick = function () {
@@ -95,6 +116,8 @@ lightButton.onclick = function () {
         headerText.style.color = "black";
         weather.style.color = 'black';
         menuHeader.style.color = 'black';
+        questionButton.style.backgroundColor = '#B0A695';
+        questionButton.style.color = 'black';
         document.body.classList.add('light-mode');
         this.innerHTML = "&#9790;";
         isLight = true;
@@ -122,6 +145,8 @@ lightButton.onclick = function () {
         headerText.style.color = "white";
         weather.style.color = 'white';
         menuHeader.style.color = 'white';
+        questionButton.style.backgroundColor = '#2C3639';
+        questionButton.style.color = 'white';
         document.body.classList.remove('light-mode');
         this.innerHTML = "&#9728;";
         isLight = false;
@@ -209,7 +234,7 @@ async function getUserLocation() {
 
 
 async function getRestaurants() {
-    const url = "https://10.120.32.94/restaurant/api/v1/restaurants/?name";
+    const url = "https://10.120.32.94/restaurant/api/v1/restaurants/";
     fetch(url)
         .then(response => response.json())
         .then(data => {
