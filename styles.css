@@ -4,6 +4,7 @@ html, body {
     display: flex;
     flex-direction: column;
     font-family: 'Indie Flower', cursive;
+    overflow: auto;
 }
 
 header {
@@ -251,8 +252,8 @@ input[type="text"], input[type="password"], input[type="email"]{
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 1.125rem;
-    border: 5px solid #A27B5C;
+    border-radius: 1.25rem;
+    border: 2px solid #A27B5C;
     text-align: center;
     font-size: 1.8rem;
     font-weight: bold;
@@ -282,6 +283,5 @@ input[type="text"], input[type="password"], input[type="email"]{
     top: -1.25rem;
     right: 0.3rem;
 }
-
 
 

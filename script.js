@@ -37,12 +37,19 @@ const menuHeader = document.querySelector(".menuHeader");
 const logo = document.getElementById("logo");
 const flag = document.getElementById("flag");
 const info = document.getElementById('userInfo');
+const lowerPhoto = document.querySelector('.lowerPhoto');
+const popUp = document.getElementById('popup');
+const closePopup = document.getElementById('closePopup');
+const dayButton = document.getElementById("dayButton");
+const weekButton = document.getElementById("weekButton");
+
+let dayClicked = false;
+let weekClicked = false;
 let isLight = false;
 let language = false;
 let kieli = 'fi';
 let imageIndex = 0;
 let images = ['Resources/graph.png', 'Resources/graph(1).png', 'Resources/graph(2).png', 'Resources/cutlery.png'];
-const lowerPhoto = document.querySelector('.lowerPhoto');
 
 document.addEventListener('DOMContentLoaded', async function () {
     await getUserLocation();
@@ -70,23 +77,44 @@ logoutButton.addEventListener('click', function () {
 )
 
 lowerPhoto.addEventListener('click', function() {
-    console.log('Current image index:', imageIndex);
     this.src = images[imageIndex];
     imageIndex = (imageIndex + 1) % images.length;
-    console.log('New image src:', this.src);
     if (imageIndex === 0){
         this.style.display = 'none';
         headerText.classList.add('rainbow-text');
     }
 });
 
-document.getElementById('questionButton').addEventListener('click', function() {
-    document.getElementById('popup').style.display = 'block';
+questionButton.addEventListener('click', function() {
+    popUp.style.display = 'block';
 });
-document.getElementById('closePopup').addEventListener('click', function() {
-    document.getElementById('popup').style.display = 'none';
+closePopup.addEventListener('click', function() {
+    popUp.style.display = 'none';
 });
 
+dayButton.addEventListener('click', function (){
+    if(!dayClicked && !weekClicked){
+        dayButton.style.backgroundColor = '#DCD7C9';
+        dayButton.style.color = 'black';
+        dayClicked = true;
+    }else{
+        dayButton.style.backgroundColor = '#2C3639';
+        dayButton.style.color = 'white';
+        dayClicked = false;
+    }
+});
+
+weekButton.addEventListener('click', function (){
+    if(!weekClicked && !dayClicked){
+        weekButton.style.backgroundColor = '#DCD7C9';
+        weekButton.style.color = 'black';
+        weekClicked = true;
+    }else{
+        weekButton.style.backgroundColor = '#2C3639';
+        weekButton.style.color = 'white';
+        weekClicked = false;
+    }
+});
 
 
 lightButton.onclick = function () {
@@ -245,21 +273,51 @@ async function getRestaurants() {
                 const id = item._id;
                 const marker = L.marker([longitude, latitude], {restaurantId: id}).addTo(map).bindPopup(item.name);
                 marker.on('popupopen', () => {
-                    getMenu(id, kieli);
+                    if(!dayClicked && !weekClicked){
+                        alert("Valitse haluatko nähdä päivän vai viikon ruokalistan!")
+                    }else{
+                        getMenu(id, kieli);
+                    }
                 });
             })
         })
 }
 
 async function getMenu(id, kieli) {
-    const urlMenu = `https://10.120.32.94/restaurant/api/v1/restaurants/daily/${id}/${kieli}`;
+    const urlMenuDaily = `https://10.120.32.94/restaurant/api/v1/restaurants/daily/${id}/${kieli}`;
+    const urlMenuWeekly = `https://10.120.32.94/restaurant/api/v1/restaurants/weekly/${id}/${kieli}`
+    let urlMenu;
+    if(dayClicked){
+        urlMenu = urlMenuDaily;
+    }else{
+        urlMenu = urlMenuWeekly;
+    }
     await fetch(urlMenu)
         .then(response => response.json())
         .then(data => {
             const menuDiv = document.getElementById("restaurantMenu");
             menuDiv.innerHTML = '';
-
-            if (data.courses && Array.isArray(data.courses) && data.courses.length > 0) {
+            if (weekClicked && data.days && Array.isArray(data.days) && data.days.length > 0) {
+                data.days.forEach(day => {
+                    const dayElement = document.createElement('h3');
+                    dayElement.style.color = 'white';
+                    dayElement.style.fontWeight = 'bold';
+                    dayElement.style.textDecoration = 'underline';
+                    dayElement.textContent = day.date;
+                    menuDiv.appendChild(dayElement);
+                    day.courses.forEach(course => {
+                        const courseElement = document.createElement('p');
+                        const priceText = course.price ? `: ${course.price}` : '';
+                        courseElement.textContent = `${course.name}${priceText}`;
+                        if (!isLight) {
+                            courseElement.style.color = 'white';
+                        } else {
+                            courseElement.style.color = 'black';
+                        }
+                        menuDiv.appendChild(courseElement);
+                    });
+                });
+            } else if (data.courses && Array.isArray(data.courses) && data.courses.length > 0) {
                 data.courses.forEach(item => {
                     const menuItem = document.createElement('p');
                     const priceText = item.price ? `: ${item.price}` : '';
