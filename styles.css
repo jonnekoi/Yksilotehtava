@@ -36,9 +36,6 @@ header {
     color: white;
 }
 
-#campusKitchens{
-    padding-left: 12.5rem;
-}
 
 #map {
     flex: 3;
@@ -222,66 +219,11 @@ input[type="text"], input[type="password"], input[type="email"]{
     font-family: 'Indie Flower', cursive;
 }
 
-#questionButton{
-    outline: none;
-    cursor: pointer;
-    font-size: 3rem;
-    line-height: 1;
-    border-radius: 50%;
-    letter-spacing: 0.125rem;
-    width: 4.375rem;
-    height: 4.375rem;
-    text-align: center;
-    color: #fff;
-    background-color: #2C3639;
-    margin: 0.625rem;
-    border: 1px solid #A27B5C;
-    justify-content: center;
-    align-items: center;
-}
 
-.popup {
-    display: none;
-    position: fixed;
-    width: 25rem;
-    height: 12.5rem;
-    background-color: #f9f9f9;
-    color: black;
-    padding: 0.625rem;
-    z-index: 1000;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 1.25rem;
-    border: 2px solid #A27B5C;
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: bold;
-}
 
-.close {
-    position: absolute;
-    top: 0.3rem;
-    right: 0.625rem;
-    color: #333;
-    font-size: 1.25rem;
-    font-weight: bold;
-    cursor: pointer;
-}
 
-.rainbow-background {
-    background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet, red, orange, yellow, green, blue, indigo, violet);
-    background-size: 200%;
-    animation-name: rainbow;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-}
 
-.popup span {
-    color: black;
-    font-size: 4rem;
-    top: -1.25rem;
-    right: 0.3rem;
-}
+
+
 
 

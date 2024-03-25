@@ -23,7 +23,6 @@ const returnButtonRegister = document.getElementById("returnButtonRegister");
 const lightButton = document.getElementById("lightButton");
 const languageButton = document.getElementById("languageButton");
 const logoutButton = document.getElementById("logoutButton");
-const questionButton = document.getElementById("questionButton");
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
 const headerElement = document.querySelector("header");
@@ -38,8 +37,6 @@ const logo = document.getElementById("logo");
 const flag = document.getElementById("flag");
 const info = document.getElementById('userInfo');
 const lowerPhoto = document.querySelector('.lowerPhoto');
-const popUp = document.getElementById('popup');
-const closePopup = document.getElementById('closePopup');
 const dayButton = document.getElementById("dayButton");
 const weekButton = document.getElementById("weekButton");
 
@@ -83,13 +80,6 @@ lowerPhoto.addEventListener('click', function() {
         this.style.display = 'none';
         headerText.classList.add('rainbow-text');
     }
-});
-
-questionButton.addEventListener('click', function() {
-    popUp.style.display = 'block';
-});
-closePopup.addEventListener('click', function() {
-    popUp.style.display = 'none';
 });
 
 dayButton.addEventListener('click', function (){
@@ -144,8 +134,6 @@ lightButton.onclick = function () {
         headerText.style.color = "black";
         weather.style.color = 'black';
         menuHeader.style.color = 'black';
-        questionButton.style.backgroundColor = '#B0A695';
-        questionButton.style.color = 'black';
         document.body.classList.add('light-mode');
         this.innerHTML = "&#9790;";
         isLight = true;
@@ -173,8 +161,6 @@ lightButton.onclick = function () {
         headerText.style.color = "white";
         weather.style.color = 'white';
         menuHeader.style.color = 'white';
-        questionButton.style.backgroundColor = '#2C3639';
-        questionButton.style.color = 'white';
         document.body.classList.remove('light-mode');
         this.innerHTML = "&#9728;";
         isLight = false;
@@ -370,6 +356,7 @@ function login() {
     })
         .then(response => response.json())
         .then(data => {
+            console.log(data.token);
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.data));
             loginButton.style.display = 'none';
