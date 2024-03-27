@@ -180,11 +180,6 @@ languageButton.onclick = function () {
         language = false;
         kieli = 'fi';
     }
-    const popup = map._popup;
-    if (popup) {
-        const id = popup._source.options.restaurantId;
-        getMenu(id, kieli);
-    }
 }
 
 
@@ -228,34 +223,37 @@ async function getRestaurants() {
             const longitude = coordinates[1];
             const id = item._id;
             const marker = L.marker([longitude, latitude], {restaurantId: id}).addTo(map);
-            marker.on('click', () => {
-                dialog.innerHTML = `
-                <h1>${item.name}</h1>
-                <p>${item.address}, ${item.postalCode}, ${item.city}</p>
-                <form method="dialog">
-                <button class="button">Sulje</button>
-                <button class="button" id="menuButtonDay">Päivän menu</button>
-                <button class="button" id="menuButtonWeek">Viikon menu</button>
-                </form>`;
-                dialog.showModal();
-                const menuButtonDay = document.querySelector('#menuButtonDay');
-                const menuButtonWeek = document.querySelector('#menuButtonWeek');
-
-                menuButtonDay.addEventListener('click', function (event){
-                    dayOrWeek = 'daily';
-                    getMenu(id, kieli, dayOrWeek);
-                });
-
-                menuButtonWeek.addEventListener('click', function (event){
-                    dayOrWeek = 'weekly';
-                    getMenu(id, kieli, dayOrWeek);
-                });
-            });
+            marker.on('click', () => markerClick(item, id, kieli));
         })
     } catch (error) {
         console.log(error);
     }
 }
+
+function markerClick(item, id, kieli) {
+    dialog.innerHTML = `
+    <h1>${item.name}</h1>
+    <p>${item.address}, ${item.postalCode}, ${item.city}</p>
+    <form method="dialog">
+    <button class="button">Sulje</button>
+    <button class="button" id="menuButtonDay">Päivän menu</button>
+    <button class="button" id="menuButtonWeek">Viikon menu</button>
+    </form>`;
+    dialog.showModal();
+    const menuButtonDay = document.querySelector('#menuButtonDay');
+    const menuButtonWeek = document.querySelector('#menuButtonWeek');
+
+    menuButtonDay.addEventListener('click', function (event){
+        dayOrWeek = 'daily';
+        getMenu(id, kieli, dayOrWeek);
+    });
+
+    menuButtonWeek.addEventListener('click', function (event){
+        dayOrWeek = 'weekly';
+        getMenu(id, kieli, dayOrWeek);
+    });
+}
+
 
 async function getMenu(id, kieli, dayOrWeek) {
     const url = `https://10.120.32.94/restaurant/api/v1/restaurants/${dayOrWeek}/${id}/${kieli}`;
