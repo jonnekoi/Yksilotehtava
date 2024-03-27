@@ -160,6 +160,9 @@ dialog{
         width: 100%;
         justify-content: space-around;
     }
+    dialog{
+        width: 50vw;
+    }
 }
 
 input[type="text"], input[type="password"], input[type="email"]{

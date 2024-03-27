@@ -39,7 +39,6 @@ const info = document.getElementById('userInfo');
 const lowerPhoto = document.querySelector('.lowerPhoto');
 const dayButton = document.getElementById("dayButton");
 const weekButton = document.getElementById("weekButton");
-
 const dialog = document.querySelector('dialog');
 
 let dayClicked = false;
@@ -83,7 +82,6 @@ lowerPhoto.addEventListener('click', function() {
         headerText.classList.add('rainbow-text');
     }
 });
-
 dayButton.addEventListener('click', function (){
     if(!dayClicked && !weekClicked){
         dayButton.style.backgroundColor = '#DCD7C9';
@@ -214,27 +212,23 @@ languageButton.onclick = function () {
     }
 }
 
+
 async function getWeather(lat, lon) {
-    const api = "";
+    const api = "ce77882036e7ff2d906c8535496d7fd9";
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api}`;
 
     try{
         const response = await fetch(url);
         const data = await response.json();
-        showWeather(data);
+        const temp = data.main.temp;
+        const city = data.name;
+        const temperature = temp - 273.15;
+        const weatherBox = document.querySelector(".weather");
+        weatherBox.innerHTML = `<h3>${city}</h3>
+                            <p>${temperature.toFixed(1)}°C</p>`;
     } catch(error){
         console.log(error);
     }
-}
-
-function showWeather(data) {
-    const weatherBox = document.querySelector(".weather");
-    const temperature = data.main.temp;
-    const city = data.name;
-
-    const convert = temperature - 273.15;
-    weatherBox.innerHTML = `<h3>${city}</h3>
-                            <p>${convert.toFixed(1)}°C</p>`;
 }
 
 async function getUserLocation() {
@@ -321,20 +315,6 @@ async function getMenu(id, kieli) {
                 }
                 menuDiv.appendChild(menuItem);
             });
-        } else {
-            const noMenuAvailable = document.createElement('p');
-            if (kieli == 'fi') {
-                noMenuAvailable.textContent = 'Ei ruokalistaa saatavilla...';
-            } else {
-                noMenuAvailable.textContent = 'No menu available...'
-            }
-
-            if (!isLight) {
-                noMenuAvailable.style.color = 'white';
-            } else {
-                noMenuAvailable.style.color = 'black';
-            }
-            menuDiv.appendChild(noMenuAvailable);
         }
     } catch (error) {
         console.log(error);
@@ -365,7 +345,6 @@ async function login() {
         }
 
         const data = await response.json();
-        console.log(data.token);
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.data));
         loginButton.style.display = 'none';
@@ -377,19 +356,13 @@ async function login() {
         if (data && data.data) {
             userData.textContent = `Tervetuloa, ${data.data.username}`;
             userData.style.color = 'white';
-        } else {
-            userData.textContent = 'Väärä käyttäjänimi tai salasana';
-            userData.style.color = 'red';
-            logoutButton.style.display = 'none';
-            loginForm.style.display = 'block';
         }
         userDiv.textContent = '';
         userDiv.appendChild(userData);
     } catch (error) {
-        console.log(error);
         const userDiv = document.getElementById("userInfo");
         const userData = document.createElement('p');
-        userData.textContent = 'Invalid username or password';
+        userData.textContent = 'Virheellinen käyttäjänimi tai salasana!';
         userData.style.color = 'red';
         userDiv.textContent = '';
         userDiv.appendChild(userData);
@@ -433,13 +406,8 @@ async function register() {
         const userDiv = document.getElementById("userInfo");
         const userData = document.createElement('p');
         if (data && data.data) {
-            userData.textContent = `Tervetuloa, ${data.data.username}`;
+            userData.textContent = `Tervetuloa, ${registerValueUsername}`;
             userData.style.color = 'white';
-        } else {
-            userData.textContent = 'Rekisteröityminen epäonnistui';
-            userData.style.color = 'red';
-            logoutButton.style.display = 'none';
-            registerForm.style.display = 'block';
         }
         userDiv.textContent = '';
         userDiv.appendChild(userData);
@@ -447,7 +415,7 @@ async function register() {
         console.log(error);
         const userDiv = document.getElementById("userInfo");
         const userData = document.createElement('p');
-        userData.textContent = 'Registration failed';
+        userData.textContent = 'Rekisteröityminen epäonnistui!';
         userData.style.color = 'red';
         userDiv.textContent = '';
         userDiv.appendChild(userData);
