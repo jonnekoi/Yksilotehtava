@@ -218,14 +218,13 @@ async function getWeather(lat, lon) {
     const api = "";
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api}`;
 
-    await fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            showWeather(data)
-        })
-        .catch(error => {
-            console.log(error);
-        })
+    try{
+        const response = await fetch(url);
+        const data = await response.json();
+        showWeather(data);
+    } catch(error){
+        console.log(error);
+    }
 }
 
 function showWeather(data) {
@@ -251,27 +250,29 @@ async function getUserLocation() {
 
 async function getRestaurants() {
     const url = "https://10.120.32.94/restaurant/api/v1/restaurants/";
-    await fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(item => {
-                const coordinates = item.location.coordinates;
-                const latitude = coordinates[0];
-                const longitude = coordinates[1];
-                const id = item._id;
-                const marker = L.marker([longitude, latitude], {restaurantId: id}).addTo(map);
-                marker.on('click', () => {
-                    dialog.innerHTML = `
-                    <h1>${item.name}</h1>
-                    <p>${item.address}, ${item.postalCode}, ${item.city}</p>
-                    <form method="dialog">
-                    <button class="button">Sulje</button>
-                    </form>`;
-                    dialog.showModal();
-                    getMenu(id, kieli);
-                });
-            })
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        data.forEach(item => {
+            const coordinates = item.location.coordinates;
+            const latitude = coordinates[0];
+            const longitude = coordinates[1];
+            const id = item._id;
+            const marker = L.marker([longitude, latitude], {restaurantId: id}).addTo(map);
+            marker.on('click', () => {
+                dialog.innerHTML = `
+                <h1>${item.name}</h1>
+                <p>${item.address}, ${item.postalCode}, ${item.city}</p>
+                <form method="dialog">
+                <button class="button">Sulje</button>
+                </form>`;
+                dialog.showModal();
+                getMenu(id, kieli);
+            });
         })
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 async function getMenu(id, kieli) {
@@ -283,62 +284,61 @@ async function getMenu(id, kieli) {
     }else{
         urlMenu = urlMenuWeekly;
     }
-    await fetch(urlMenu)
-        .then(response => response.json())
-        .then(data => {
-            const menuDiv = document.getElementById("restaurantMenu");
-            menuDiv.innerHTML = '';
-            if (weekClicked && data.days && Array.isArray(data.days) && data.days.length > 0) {
-                data.days.forEach(day => {
-                    const dayElement = document.createElement('h3');
-                    dayElement.style.color = 'white';
-                    dayElement.style.fontWeight = 'bold';
-                    dayElement.style.textDecoration = 'underline';
-                    dayElement.textContent = day.date;
-                    menuDiv.appendChild(dayElement);
-                    day.courses.forEach(course => {
-                        const courseElement = document.createElement('p');
-                        const priceText = course.price ? `: ${course.price}` : '';
-                        courseElement.textContent = `${course.name}${priceText}`;
-                        if (!isLight) {
-                            courseElement.style.color = 'white';
-                        } else {
-                            courseElement.style.color = 'black';
-                        }
-                        menuDiv.appendChild(courseElement);
-                    });
-                });
-            } else if (data.courses && Array.isArray(data.courses) && data.courses.length > 0) {
-                data.courses.forEach(item => {
-                    const menuItem = document.createElement('p');
-                    const priceText = item.price ? `: ${item.price}` : '';
-                    menuItem.textContent = `${item.name}${priceText}`;
+    try {
+        const response = await fetch(urlMenu);
+        const data = await response.json();
+        const menuDiv = document.getElementById("restaurantMenu");
+        menuDiv.innerHTML = '';
+        if (weekClicked && data.days && Array.isArray(data.days) && data.days.length > 0) {
+            data.days.forEach(day => {
+                const dayElement = document.createElement('h3');
+                dayElement.style.color = 'white';
+                dayElement.style.fontWeight = 'bold';
+                dayElement.style.textDecoration = 'underline';
+                dayElement.textContent = day.date;
+                menuDiv.appendChild(dayElement);
+                day.courses.forEach(course => {
+                    const courseElement = document.createElement('p');
+                    const priceText = course.price ? `: ${course.price}` : '';
+                    courseElement.textContent = `${course.name}${priceText}`;
                     if (!isLight) {
-                        menuItem.style.color = 'white';
+                        courseElement.style.color = 'white';
                     } else {
-                        menuItem.style.color = 'black';
+                        courseElement.style.color = 'black';
                     }
-                    menuDiv.appendChild(menuItem);
+                    menuDiv.appendChild(courseElement);
                 });
-            } else {
-                const noMenuAvailable = document.createElement('p');
-                if (kieli == 'fi') {
-                    noMenuAvailable.textContent = 'Ei ruokalistaa saatavilla...';
-                } else {
-                    noMenuAvailable.textContent = 'No menu available...'
-                }
-
+            });
+        } else if (data.courses && Array.isArray(data.courses) && data.courses.length > 0) {
+            data.courses.forEach(item => {
+                const menuItem = document.createElement('p');
+                const priceText = item.price ? `: ${item.price}` : '';
+                menuItem.textContent = `${item.name}${priceText}`;
                 if (!isLight) {
-                    noMenuAvailable.style.color = 'white';
+                    menuItem.style.color = 'white';
                 } else {
-                    noMenuAvailable.style.color = 'black';
+                    menuItem.style.color = 'black';
                 }
-                menuDiv.appendChild(noMenuAvailable);
+                menuDiv.appendChild(menuItem);
+            });
+        } else {
+            const noMenuAvailable = document.createElement('p');
+            if (kieli == 'fi') {
+                noMenuAvailable.textContent = 'Ei ruokalistaa saatavilla...';
+            } else {
+                noMenuAvailable.textContent = 'No menu available...'
             }
-        })
-        .catch(error => {
-            console.log(error);
-        });
+
+            if (!isLight) {
+                noMenuAvailable.style.color = 'white';
+            } else {
+                noMenuAvailable.style.color = 'black';
+            }
+            menuDiv.appendChild(noMenuAvailable);
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 async function login() {
@@ -351,47 +351,49 @@ async function login() {
         password: loginValuePassword,
     };
 
-    await fetch("https://10.120.32.94/restaurant/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userDetails)
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.token);
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.data));
-            loginButton.style.display = 'none';
-            registerButton.style.display = 'none';
-            loginForm.style.display = 'none';
-            logoutButton.style.display = 'block';
-            const userDiv = document.getElementById("userInfo");
-            const userData = document.createElement('p');
-            if (data && data.data) {
-                userData.textContent = `Tervetuloa, ${data.data.username}`;
-                userData.style.color = 'white';
-            } else {
-                userData.textContent = 'Väärä käyttäjänimi tai salasana';
-                userData.style.color = 'red';
-                logoutButton.style.display = 'none';
-                loginForm.style.display = 'block';
-            }
-            userDiv.textContent = '';
-            userDiv.appendChild(userData);
-        })
-        .catch(error => {
-            console.log(error);
-            if (error.message === 'Unauthorized') {
-                const userDiv = document.getElementById("userInfo");
-                const userData = document.createElement('p');
-                userData.textContent = 'Invalid username or password';
-                userData.style.color = 'red';
-                userDiv.textContent = '';
-                userDiv.appendChild(userData);
-            }
+    try {
+        const response = await fetch("https://10.120.32.94/restaurant/api/v1/auth/login", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userDetails)
         });
+
+        if (!response.ok) {
+            throw new Error('Unauthorized');
+        }
+
+        const data = await response.json();
+        console.log(data.token);
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.data));
+        loginButton.style.display = 'none';
+        registerButton.style.display = 'none';
+        loginForm.style.display = 'none';
+        logoutButton.style.display = 'block';
+        const userDiv = document.getElementById("userInfo");
+        const userData = document.createElement('p');
+        if (data && data.data) {
+            userData.textContent = `Tervetuloa, ${data.data.username}`;
+            userData.style.color = 'white';
+        } else {
+            userData.textContent = 'Väärä käyttäjänimi tai salasana';
+            userData.style.color = 'red';
+            logoutButton.style.display = 'none';
+            loginForm.style.display = 'block';
+        }
+        userDiv.textContent = '';
+        userDiv.appendChild(userData);
+    } catch (error) {
+        console.log(error);
+        const userDiv = document.getElementById("userInfo");
+        const userData = document.createElement('p');
+        userData.textContent = 'Invalid username or password';
+        userData.style.color = 'red';
+        userDiv.textContent = '';
+        userDiv.appendChild(userData);
+    }
 }
 
 async function register() {
@@ -408,36 +410,48 @@ async function register() {
         email: registerValueEmail,
     };
 
-    await fetch("https://10.120.32.94/restaurant/api/v1/users", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(registerDetails)
-    })
-        .then(response => response.json())
-        .then(data => {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.data));
-            loginButton.style.display = 'none';
-            registerButton.style.display = 'none';
-            registerForm.style.display = 'none';
-            logoutButton.style.display = 'block';
-            const userDiv = document.getElementById("userInfo");
-            const userData = document.createElement('p');
-            if (data && data.data) {
-                userData.textContent = `Tervetuloa, ${data.data.username}`;
-                userData.style.color = 'white';
-            } else {
-                userData.textContent = 'Rekisteröityminen epäonnistui';
-                userData.style.color = 'red';
-                logoutButton.style.display = 'none';
-                registerForm.style.display = 'block';
-            }
-            userDiv.textContent = '';
-            userDiv.appendChild(userData);
-        })
-        .catch(error => console.log(error))
+    try {
+        const response = await fetch("https://10.120.32.94/restaurant/api/v1/users", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(registerDetails)
+        });
+
+        if (!response.ok) {
+            throw new Error('Registration failed');
+        }
+
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.data));
+        loginButton.style.display = 'none';
+        registerButton.style.display = 'none';
+        registerForm.style.display = 'none';
+        logoutButton.style.display = 'block';
+        const userDiv = document.getElementById("userInfo");
+        const userData = document.createElement('p');
+        if (data && data.data) {
+            userData.textContent = `Tervetuloa, ${data.data.username}`;
+            userData.style.color = 'white';
+        } else {
+            userData.textContent = 'Rekisteröityminen epäonnistui';
+            userData.style.color = 'red';
+            logoutButton.style.display = 'none';
+            registerForm.style.display = 'block';
+        }
+        userDiv.textContent = '';
+        userDiv.appendChild(userData);
+    } catch (error) {
+        console.log(error);
+        const userDiv = document.getElementById("userInfo");
+        const userData = document.createElement('p');
+        userData.textContent = 'Registration failed';
+        userData.style.color = 'red';
+        userDiv.textContent = '';
+        userDiv.appendChild(userData);
+    }
 }
 
 function userCheck() {
