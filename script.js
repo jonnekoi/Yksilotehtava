@@ -382,7 +382,17 @@ function login() {
             userDiv.textContent = '';
             userDiv.appendChild(userData);
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error);
+            if (error.message === 'Unauthorized') {
+                const userDiv = document.getElementById("userInfo");
+                const userData = document.createElement('p');
+                userData.textContent = 'Invalid username or password';
+                userData.style.color = 'red';
+                userDiv.textContent = '';
+                userDiv.appendChild(userData);
+            }
+        });
 }
 
 function register() {
