@@ -40,6 +40,8 @@ const lowerPhoto = document.querySelector('.lowerPhoto');
 const dayButton = document.getElementById("dayButton");
 const weekButton = document.getElementById("weekButton");
 
+const dialog = document.querySelector('dialog');
+
 let dayClicked = false;
 let weekClicked = false;
 let isLight = false;
@@ -257,13 +259,16 @@ async function getRestaurants() {
                 const latitude = coordinates[0];
                 const longitude = coordinates[1];
                 const id = item._id;
-                const marker = L.marker([longitude, latitude], {restaurantId: id}).addTo(map).bindPopup(item.name);
-                marker.on('popupopen', () => {
-                    if(!dayClicked && !weekClicked){
-                        alert("Valitse haluatko nähdä päivän vai viikon ruokalistan!")
-                    }else{
-                        getMenu(id, kieli);
-                    }
+                const marker = L.marker([longitude, latitude], {restaurantId: id}).addTo(map);
+                marker.on('click', () => {
+                    dialog.innerHTML = `
+                    <h1>${item.name}</h1>
+                    <p>${item.address}, ${item.postalCode}, ${item.city}</p>
+                    <form method="dialog">
+                    <button class="button">Sulje</button>
+                    </form>`;
+                    dialog.showModal();
+                    getMenu(id, kieli);
                 });
             })
         })
