@@ -214,11 +214,11 @@ languageButton.onclick = function () {
     }
 }
 
-function getWeather(lat, lon) {
+async function getWeather(lat, lon) {
     const api = "";
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api}`;
 
-    fetch(url)
+    await fetch(url)
         .then(response => response.json())
         .then(data => {
             showWeather(data)
@@ -240,7 +240,7 @@ function showWeather(data) {
 
 async function getUserLocation() {
     if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function (position) {
+        await navigator.geolocation.getCurrentPosition(function (position) {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
             getWeather(lat, lon);
@@ -341,8 +341,7 @@ async function getMenu(id, kieli) {
         });
 }
 
-function login() {
-    const info = document.getElementById('userInfo');
+async function login() {
     const loginInput = document.getElementById("loginUsername");
     const loginInputPassword = document.getElementById("loginPassword");
     const loginValue = loginInput.value;
@@ -352,7 +351,7 @@ function login() {
         password: loginValuePassword,
     };
 
-    fetch("https://10.120.32.94/restaurant/api/v1/auth/login", {
+    await fetch("https://10.120.32.94/restaurant/api/v1/auth/login", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
@@ -395,7 +394,7 @@ function login() {
         });
 }
 
-function register() {
+async function register() {
     const registerInputUsername = document.getElementById("registerUsername");
     const registerValueUsername = registerInputUsername.value;
     const registerInputPassword = document.getElementById("registerPassword");
@@ -409,7 +408,7 @@ function register() {
         email: registerValueEmail,
     };
 
-    fetch("https://10.120.32.94/restaurant/api/v1/users", {
+    await fetch("https://10.120.32.94/restaurant/api/v1/users", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
