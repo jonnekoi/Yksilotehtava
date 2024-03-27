@@ -37,12 +37,9 @@ const logo = document.getElementById("logo");
 const flag = document.getElementById("flag");
 const info = document.getElementById('userInfo');
 const lowerPhoto = document.querySelector('.lowerPhoto');
-const dayButton = document.getElementById("dayButton");
-const weekButton = document.getElementById("weekButton");
 const dialog = document.querySelector('dialog');
 
-let dayClicked = false;
-let weekClicked = false;
+let dayOrWeek = '';
 let isLight = false;
 let language = false;
 let kieli = 'fi';
@@ -55,12 +52,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     userCheck()
 })
 loginForm.addEventListener('submit', function (event) {
-    event.preventDefault();
     login()
-});
+})
 
 registerForm.addEventListener('submit', function (event) {
-    event.preventDefault();
     register()
 })
 
@@ -82,30 +77,6 @@ lowerPhoto.addEventListener('click', function() {
         headerText.classList.add('rainbow-text');
     }
 });
-dayButton.addEventListener('click', function (){
-    if(!dayClicked && !weekClicked){
-        dayButton.style.backgroundColor = '#DCD7C9';
-        dayButton.style.color = 'black';
-        dayClicked = true;
-    }else{
-        dayButton.style.backgroundColor = '#2C3639';
-        dayButton.style.color = 'white';
-        dayClicked = false;
-    }
-});
-
-weekButton.addEventListener('click', function (){
-    if(!weekClicked && !dayClicked){
-        weekButton.style.backgroundColor = '#DCD7C9';
-        weekButton.style.color = 'black';
-        weekClicked = true;
-    }else{
-        weekButton.style.backgroundColor = '#2C3639';
-        weekButton.style.color = 'white';
-        weekClicked = false;
-    }
-});
-
 
 lightButton.onclick = function () {
     const menuItems = document.querySelectorAll("#restaurantMenu p");
@@ -134,6 +105,8 @@ lightButton.onclick = function () {
         headerText.style.color = "black";
         weather.style.color = 'black';
         menuHeader.style.color = 'black';
+        dialog.style.backgroundColor = '#B0A695';
+        dialog.style.color = 'black';
         document.body.classList.add('light-mode');
         this.innerHTML = "&#9790;";
         isLight = true;
@@ -162,6 +135,8 @@ lightButton.onclick = function () {
         weather.style.color = 'white';
         menuHeader.style.color = 'white';
         document.body.classList.remove('light-mode');
+        dialog.style.backgroundColor = '#2C3639';
+        dialog.style.color = 'white';
         this.innerHTML = "&#9728;";
         isLight = false;
     }
@@ -259,9 +234,22 @@ async function getRestaurants() {
                 <p>${item.address}, ${item.postalCode}, ${item.city}</p>
                 <form method="dialog">
                 <button class="button">Sulje</button>
+                <button class="button" id="menuButtonDay">Päivän menu</button>
+                <button class="button" id="menuButtonWeek">Viikon menu</button>
                 </form>`;
                 dialog.showModal();
-                getMenu(id, kieli);
+                const menuButtonDay = document.querySelector('#menuButtonDay');
+                const menuButtonWeek = document.querySelector('#menuButtonWeek');
+
+                menuButtonDay.addEventListener('click', function (event){
+                    dayOrWeek = 'daily';
+                    getMenu(id, kieli, dayOrWeek);
+                });
+
+                menuButtonWeek.addEventListener('click', function (event){
+                    dayOrWeek = 'weekly';
+                    getMenu(id, kieli, dayOrWeek);
+                });
             });
         })
     } catch (error) {
@@ -269,21 +257,14 @@ async function getRestaurants() {
     }
 }
 
-async function getMenu(id, kieli) {
-    const urlMenuDaily = `https://10.120.32.94/restaurant/api/v1/restaurants/daily/${id}/${kieli}`;
-    const urlMenuWeekly = `https://10.120.32.94/restaurant/api/v1/restaurants/weekly/${id}/${kieli}`
-    let urlMenu;
-    if(dayClicked){
-        urlMenu = urlMenuDaily;
-    }else{
-        urlMenu = urlMenuWeekly;
-    }
+async function getMenu(id, kieli, dayOrWeek) {
+    const url = `https://10.120.32.94/restaurant/api/v1/restaurants/${dayOrWeek}/${id}/${kieli}`;
     try {
-        const response = await fetch(urlMenu);
+        const response = await fetch(url);
         const data = await response.json();
         const menuDiv = document.getElementById("restaurantMenu");
         menuDiv.innerHTML = '';
-        if (weekClicked && data.days && Array.isArray(data.days) && data.days.length > 0) {
+        if (data.days && Array.isArray(data.days) && data.days.length > 0) {
             data.days.forEach(day => {
                 const dayElement = document.createElement('h3');
                 dayElement.style.color = 'white';

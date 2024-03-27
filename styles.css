@@ -129,6 +129,7 @@ dialog{
 .form input[type="submit"]:hover, .form input[type="button"]:hover{
     box-shadow: 3px 4px black;
 }
+
 .weather {
     margin-top: auto;
     color: white;
