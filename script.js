@@ -49,19 +49,19 @@ let images = ['Resources/graph.png', 'Resources/graph(1).png', 'Resources/graph(
 document.addEventListener('DOMContentLoaded', async function () {
     await getUserLocation();
     await getRestaurants();
-    userCheck()
+    await userCheck();
 })
-loginForm.addEventListener('submit', function (event) {
-    login()
+loginForm.addEventListener('submit', async function (event) {
+    await login();
 })
 
-registerForm.addEventListener('submit', function (event) {
-    register()
+registerForm.addEventListener('submit', async function (event) {
+    await register();
 })
 
 logoutButton.addEventListener('click', function () {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
         loginButton.style.display = 'block';
         registerButton.style.display = 'block';
         logoutButton.style.display = 'none';
@@ -184,7 +184,7 @@ languageButton.onclick = function () {
 
 
 async function getWeather(lat, lon) {
-    const api = "";
+    const api = "ce77882036e7ff2d906c8535496d7fd9";
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api}`;
 
     try{
@@ -324,8 +324,8 @@ async function login() {
         }
 
         const data = await response.json();
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.data));
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.data));
         loginButton.style.display = 'none';
         registerButton.style.display = 'none';
         loginForm.style.display = 'none';
@@ -370,14 +370,14 @@ async function register() {
             },
             body: JSON.stringify(registerDetails)
         });
-
+        console.log(response);
         if (!response.ok) {
             throw new Error('Registration failed');
         }
 
         const data = await response.json();
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.data));
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.data));
         loginButton.style.display = 'none';
         registerButton.style.display = 'none';
         registerForm.style.display = 'none';
@@ -402,8 +402,8 @@ async function register() {
 }
 
 function userCheck() {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'));
+    const token = sessionStorage.getItem('token');
+    const user = JSON.parse(sessionStorage.getItem('user'));
     if (token && user) {
         loginButton.style.display = 'none';
         registerButton.style.display = 'none';
