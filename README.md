@@ -13,3 +13,5 @@ Campus Kitchens is a web app developed using JavaScript. The application is desi
 - **User Interface Customization**: The application supports a light and dark mode for displaying the web app.
 
 - **Localization**: The application supports 2 menu languages. The language can be switched between Finnish and English.
+
+- **Favorite Restaurant**: Set your favourite restaurant.
