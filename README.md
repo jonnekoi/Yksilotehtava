@@ -16,6 +16,10 @@ Campus Kitchens is a web app developed using JavaScript. The application is desi
 
 - **Favorite Restaurant**: Set your favourite restaurant.
 
+**Metropolia VPN needed to access!!**
+
+[LINK TO APP](https://users.metropolia.fi/~jonnekoi/Yksilotehtava/)
+
 ![Image](https://users.metropolia.fi/~jonnekoi/Yksil%c3%b6TehtValid/HTML.png)
 
 ![Image](https://users.metropolia.fi/~jonnekoi/Yksil%c3%b6TehtValid/css.png)
