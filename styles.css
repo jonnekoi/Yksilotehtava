@@ -220,29 +220,3 @@ input[type="text"], input[type="password"], input[type="email"]{
     display: none;
 }
 
-.lowerPhoto {
-    padding-left: 0.625rem;
-    position: fixed;
-    bottom: -28.3rem;
-    transition: bottom 1s ease;
-}
-
-.lowerPhoto:hover {
-    bottom: -10rem;
-}
-
-@keyframes rainbow {
-    0% {background-position: 0%;}
-    100% {background-position: 100%;}
-}
-
-.rainbow-text {
-    background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet, red, orange, yellow, green, blue, indigo, violet);
-    background-size: 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation-name: rainbow;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-    font-family: 'Indie Flower', cursive;
-}

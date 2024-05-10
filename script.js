@@ -36,47 +36,36 @@ const menuHeader = document.querySelector(".menuHeader");
 const logo = document.getElementById("logo");
 const flag = document.getElementById("flag");
 const info = document.getElementById('userInfo');
-const lowerPhoto = document.querySelector('.lowerPhoto');
 const dialog = document.querySelector('dialog');
 
 let dayOrWeek = '';
 let isLight = false;
 let language = false;
 let kieli = 'fi';
-let imageIndex = 0;
-let images = ['Resources/graph.png', 'Resources/graph(1).png', 'Resources/graph(2).png', 'Resources/cutlery.png'];
 
 document.addEventListener('DOMContentLoaded', async function () {
     await getUserLocation();
     await getRestaurants();
     await userCheck();
-})
+});
+
 loginForm.addEventListener('submit', async function (event) {
-    await login();
-})
+    await login(event);
+});
 
 registerForm.addEventListener('submit', async function (event) {
-    await register();
-})
+    await register(event);
+});
 
 logoutButton.addEventListener('click', function () {
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         loginButton.style.display = 'block';
         registerButton.style.display = 'block';
         logoutButton.style.display = 'none';
         info.textContent = '';
     }
-)
-
-lowerPhoto.addEventListener('click', function() {
-    this.src = images[imageIndex];
-    imageIndex = (imageIndex + 1) % images.length;
-    if (imageIndex === 0){
-        this.style.display = 'none';
-        headerText.classList.add('rainbow-text');
-    }
-});
+);
 
 lightButton.onclick = function () {
     const menuItems = document.querySelectorAll("#restaurantMenu p");
@@ -85,17 +74,17 @@ lightButton.onclick = function () {
         headerElement.style.backgroundColor = '#EBE3D5';
         Array.from(boxElement).forEach(boxElement => {
             boxElement.style.backgroundColor = '#EBE3D5';
-        })
+        });
         Array.from(buttons).forEach(buttons => {
             buttons.style.backgroundColor = '#B0A695';
             buttons.style.color = 'black';
-        })
+        });
         menuItems.forEach(item => {
             item.style.color = 'black';
-        })
+        });
         userInfo.forEach(item => {
             item.style.color = 'black';
-        })
+        });
         logo.src = 'Resources/cutlery.png';
         lightButton.style.backgroundColor = '#B0A695';
         languageButton.style.backgroundColor = '#B0A695';
@@ -114,17 +103,17 @@ lightButton.onclick = function () {
         headerElement.style.backgroundColor = '#3F4E4F';
         Array.from(boxElement).forEach(boxElement => {
             boxElement.style.backgroundColor = '#3F4E4F';
-        })
+        });
         Array.from(buttons).forEach(buttons => {
             buttons.style.backgroundColor = '#2C3639';
             buttons.style.color = 'white';
-        })
+        });
         menuItems.forEach(item => {
             item.style.color = 'white';
-        })
+        });
         userInfo.forEach(item => {
             item.style.color = 'white';
-        })
+        });
         logo.src = 'Resources/cutlery_white.png';
         lightButton.style.backgroundColor = '#2C3639';
         lightButton.style.color = 'white';
@@ -140,19 +129,19 @@ lightButton.onclick = function () {
         this.innerHTML = "&#9728;";
         isLight = false;
     }
-}
+};
 
 loginButton.onclick = function () {
     loginForm.style.display = 'block';
     loginButton.style.display = 'none';
     registerButton.style.display = 'none';
-}
+};
 
 registerButton.onclick = function () {
     registerForm.style.display = 'block';
     loginButton.style.display = 'none';
     registerButton.style.display = 'none';
-}
+};
 
 returnButtonRegister.onclick = function () {
     registerForm.style.display = 'none';
@@ -160,7 +149,7 @@ returnButtonRegister.onclick = function () {
     registerButton.style.display = 'block';
     info.style.display = 'none';
     registerForm.reset();
-}
+};
 
 returnButtonLogin.onclick = function () {
     loginForm.style.display = 'none';
@@ -168,7 +157,7 @@ returnButtonLogin.onclick = function () {
     registerButton.style.display = 'block';
     info.style.display = 'none';
     loginForm.reset();
-}
+};
 
 languageButton.onclick = function () {
     if (!language) {
@@ -180,7 +169,7 @@ languageButton.onclick = function () {
         language = false;
         kieli = 'fi';
     }
-}
+};
 
 
 async function getWeather(lat, lon) {
@@ -224,7 +213,7 @@ async function getRestaurants() {
             const id = item._id;
             const marker = L.marker([longitude, latitude], {restaurantId: id}).addTo(map);
             marker.on('click', () => markerClick(item, id, kieli));
-        })
+        });
     } catch (error) {
         console.log(error);
     }
@@ -238,19 +227,27 @@ function markerClick(item, id, kieli) {
     <button class="button">Sulje</button>
     <button class="button" id="menuButtonDay">Päivän menu</button>
     <button class="button" id="menuButtonWeek">Viikon menu</button>
+    <button class="button" id="favoriteRes">Aseta suosikiksi</button>
     </form>`;
     dialog.showModal();
     const menuButtonDay = document.querySelector('#menuButtonDay');
     const menuButtonWeek = document.querySelector('#menuButtonWeek');
+    const favorite = document.querySelector('#favoriteRes');
 
-    menuButtonDay.addEventListener('click', function (event){
+    menuButtonDay.addEventListener('click', function (){
         dayOrWeek = 'daily';
         getMenu(id, kieli, dayOrWeek);
     });
 
-    menuButtonWeek.addEventListener('click', function (event){
+    menuButtonWeek.addEventListener('click', function (){
         dayOrWeek = 'weekly';
         getMenu(id, kieli, dayOrWeek);
+    });
+
+    favorite.addEventListener('click', async function() {
+        console.log(id);
+        await setFavoriteRestaurant(id);
+        location.reload();
     });
 }
 
@@ -300,7 +297,8 @@ async function getMenu(id, kieli, dayOrWeek) {
     }
 }
 
-async function login() {
+async function login(event) {
+    event.preventDefault();
     const loginInput = document.getElementById("loginUsername");
     const loginInputPassword = document.getElementById("loginPassword");
     const loginValue = loginInput.value;
@@ -324,20 +322,28 @@ async function login() {
         }
 
         const data = await response.json();
-        sessionStorage.setItem('token', data.token);
-        sessionStorage.setItem('user', JSON.stringify(data.data));
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.data));
+        localStorage.set
         loginButton.style.display = 'none';
         registerButton.style.display = 'none';
         loginForm.style.display = 'none';
         logoutButton.style.display = 'block';
         const userDiv = document.getElementById("userInfo");
         const userData = document.createElement('p');
+        const fRes = document.createElement('p');
         if (data && data.data) {
             userData.textContent = `Tervetuloa, ${data.data.username}`;
             userData.style.color = 'white';
+            const fId = data.data.favouriteRestaurant;
+            const suosikki =  await getSuosikki(fId);
+            console.log(suosikki);
+            fRes.textContent = 'Suosikki ravintola: ' + suosikki.name;
+            fRes.style.color = 'white';
         }
         userDiv.textContent = '';
         userDiv.appendChild(userData);
+        userDiv.appendChild(fRes);
     } catch (error) {
         const userDiv = document.getElementById("userInfo");
         const userData = document.createElement('p');
@@ -348,7 +354,8 @@ async function login() {
     }
 }
 
-async function register() {
+async function register(event) {
+    event.preventDefault();
     const registerInputUsername = document.getElementById("registerUsername");
     const registerValueUsername = registerInputUsername.value;
     const registerInputPassword = document.getElementById("registerPassword");
@@ -356,28 +363,28 @@ async function register() {
     const registerInputEmail = document.getElementById("registerEmail");
     const registerValueEmail = registerInputEmail.value;
 
-    const registerDetails = {
-        username: registerValueUsername,
-        password: registerValuePassword,
-        email: registerValueEmail,
-    };
+    const data = {
+        body: JSON.stringify({
+            username: registerValueUsername,
+            password: registerValuePassword,
+            email: registerValueEmail,
+        }),
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+        },
+    }
 
     try {
-        const response = await fetch("https://10.120.32.94/restaurant/api/v1/users", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(registerDetails)
-        });
+        const response = await fetch("https://10.120.32.94/restaurant/api/v1/users", data);
         console.log(response);
         if (!response.ok) {
             throw new Error('Registration failed');
         }
 
         const data = await response.json();
-        sessionStorage.setItem('token', data.token);
-        sessionStorage.setItem('user', JSON.stringify(data.data));
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.data));
         loginButton.style.display = 'none';
         registerButton.style.display = 'none';
         registerForm.style.display = 'none';
@@ -401,16 +408,60 @@ async function register() {
     }
 }
 
-function userCheck() {
-    const token = sessionStorage.getItem('token');
-    const user = JSON.parse(sessionStorage.getItem('user'));
+async function userCheck() {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
     if (token && user) {
         loginButton.style.display = 'none';
         registerButton.style.display = 'none';
         const userData = document.createElement('p');
+        const fRes = document.createElement('p');
         userData.textContent = `Tervetuloa, ${user.username}`;
         userData.style.color = 'white';
+        const fId = user.favouriteRestaurant;
+        const suosikki =  await getSuosikki(fId);
+        console.log(suosikki);
+        fRes.textContent = 'Suosikki ravintola: ' + suosikki.name;
+        fRes.style.color = 'white';
         info.appendChild(userData);
+        info.appendChild(fRes);
         logoutButton.style.display = 'block';
     }
+}
+
+async function setFavoriteRestaurant(id) {
+    const resta = {
+        favouriteRestaurant: id
+    };
+
+    const token = localStorage.getItem('token');
+
+    const data = {
+        method: 'PUT',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify(resta)
+    };
+
+    try {
+        const response = await fetch('https://10.120.32.94/restaurant/api/v1/users', data);
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+        const user = JSON.parse(localStorage.getItem('user'));
+        user.favouriteRestaurant = id;
+        localStorage.setItem('user', JSON.stringify(user));
+        const favRestaurantInfo = document.getElementById('favRestaurantInfo');
+        const suosikki = await getSuosikki(id);
+        favRestaurantInfo.textContent = 'Suosikki ravintola: ' + suosikki.name;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+const getSuosikki = async function (id) {
+    const response = await fetch(`https://10.120.32.94/restaurant/api/v1/restaurants/${id}`);
+    return await response.json();
 }
