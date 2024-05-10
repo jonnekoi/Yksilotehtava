@@ -19,3 +19,5 @@ Campus Kitchens is a web app developed using JavaScript. The application is desi
 ![Image](https://users.metropolia.fi/~jonnekoi/Yksil%c3%b6TehtValid/HTML.png)
 
 ![Image](https://users.metropolia.fi/~jonnekoi/Yksil%c3%b6TehtValid/css.png)
+
+![Image](https://users.metropolia.fi/~jonnekoi/Yksil%c3%b6TehtValid/lightHouse.png)
