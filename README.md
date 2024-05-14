@@ -16,7 +16,7 @@ Campus Kitchens is a web app developed using JavaScript. The application is desi
 
 - **Favorite Restaurant**: Set your favourite restaurant.
   
--**Weather**: The app shows the temperature of the users position
+- **Weather**: The app shows the temperature of the users position
 
 
 **Metropolia VPN needed to access!!**
