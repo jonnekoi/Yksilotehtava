@@ -8,13 +8,16 @@ Campus Kitchens is a web app developed using JavaScript. The application is desi
 
 - **User Session Management**: The application checks if the user is logged in by checking the local storage for the user's token and data.
 
-- **Restaurant Menu Display**: The application fetches and displays the daily menu of a restaurant. If the restaurant's menu is not available, a message is displayed to the user.
+- **Restaurant Menu Display**: The application fetches and displays the daily menu of a restaurant or weekly menu
 
 - **User Interface Customization**: The application supports a light and dark mode for displaying the web app.
 
 - **Localization**: The application supports 2 menu languages. The language can be switched between Finnish and English.
 
 - **Favorite Restaurant**: Set your favourite restaurant.
+  
+-**Weather**: The app shows the temperature of the users position
+
 
 **Metropolia VPN needed to access!!**
 
